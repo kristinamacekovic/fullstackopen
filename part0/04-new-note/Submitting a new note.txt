@@ -1,0 +1,38 @@
+title Submitting a new note
+
+participant B
+participant S
+note left of B
+B stands for Browser
+end note
+
+note right of S
+B stands for Server
+end note
+
+B->S: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+S-->B: Status code 302: please redirect to /notes
+note left of B
+Redirecting to notes again
+end note
+B->S: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+S-->B: Status code 200 (everything ok), sending html
+note left of B
+Hmm I see some styles in the head, better ask for them!
+end note
+B->S: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+S-->B: Status code 200 (everything ok), sending main.css
+note left of B
+Ok, now I see a script, I'm gonna ask again.
+end note
+B->S: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+S-->B: Status code 200 (everything ok), sending main.js
+note left of B
+While executing the script, I have to fetch some \n over data in the file data.json. Where to ask?
+Why the server again of course :D
+end note
+B->S: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+S-->B: Status code 200 (everything ok), sending json file
+note left of B
+Now I can render the notes via an event handler
+end note

@@ -1,0 +1,14 @@
+title Submit new note on SPA
+
+participant B
+participant S
+note left of B
+B stands for Browser
+end note
+
+note right of S
+B stands for Server
+end note
+
+B->S: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa \n payload: {"content":"hmmm","date":"2019-07-28T17:35:50.432Z"}
+S-->B: Status code 201 - created \n payload: {"message":"note created"}
