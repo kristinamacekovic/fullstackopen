@@ -4,8 +4,14 @@ import ReactDOM from "react-dom";
 const App = props => {
   const [selected, setSelected] = useState(0);
 
+  let indexOfMax = props.counts.reduce(
+    (iMax, x, i, arr) => (x > arr[iMax] ? i : iMax),
+    0
+  );
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{props.anecdotes[selected]}</p>
       <p>has {props.counts[selected]} votes</p>
       <button onClick={() => (props.counts[selected] += 1)}>vote</button>
@@ -16,6 +22,8 @@ const App = props => {
       >
         next anecdote
       </button>
+      <h1>Anecdote with most votes</h1>
+      <p>{props.anecdotes[indexOfMax]}</p>
     </div>
   );
 };
