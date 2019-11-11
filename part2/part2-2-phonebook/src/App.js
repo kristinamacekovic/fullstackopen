@@ -1,65 +1,69 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { Numbers } from './components/Numbers'
-import { Form } from './components/Form'
-import { Filter } from './components/Filter'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Numbers } from "./components/Numbers";
+import { Form } from "./components/Form";
+import { Filter } from "./components/Filter";
+import server from "./services/server";
 
 const App = () => {
-  const [persons, setPersons] = useState([])
-  const [filteredPersons, setFilteredPersons] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
+  const [persons, setPersons] = useState([]);
+  const [filteredPersons, setFilteredPersons] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   useEffect(() => {
     // console.log('effect fired')
-    axios.get('http://localhost:3001/persons').then(response => {
+    axios.get("http://localhost:3000/persons").then(response => {
       // console.log('promise fulfilled')
-      setPersons(response.data)
-      setFilteredPersons(response.data)
+      setPersons(response.data);
+      setFilteredPersons(response.data);
       // console.log(response.data)
-    })
-  }, [])
+    });
+  }, []);
 
   const handleNameChange = event => {
-    setNewName(event.target.value)
-  }
+    setNewName(event.target.value);
+  };
 
   const handleNumberChange = event => {
-    setNewNumber(event.target.value)
-  }
+    setNewNumber(event.target.value);
+  };
 
   const handleSearch = event => {
-    setSearchTerm(event.target.value.toLowerCase())
+    setSearchTerm(event.target.value.toLowerCase());
     let match = persons.filter(person => {
-      return person.name.toLowerCase().includes(searchTerm)
-    })
-    setFilteredPersons(match)
-  }
+      return person.name.toLowerCase().includes(searchTerm);
+    });
+    setFilteredPersons(match);
+  };
 
   const addToPhonebook = event => {
-    event.preventDefault()
+    event.preventDefault();
     const newPerson = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+    };
+    if (isInPersons(newName)) {
+      alert(`${newName} is already added to phonebook`);
+    } else {
+      server.add(newPerson).then(data => {
+        setPersons(persons.concat(data));
+        setNewName("");
+        setNewNumber("");
+      });
     }
-    isInPersons(newName)
-      ? alert(`${newName} is already added to phonebook`)
-      : setPersons(persons.concat(newPerson))
-
-    setNewName('')
-    setNewNumber('')
-  }
+  };
 
   const isInPersons = name => {
     let match = persons.filter(person => {
-      return person.name === name
-    })
+      return person.name === name;
+    });
     if (match.length) {
-      return true
+      return true;
     }
-    return false
-  }
+    return false;
+  };
 
   return (
     <div>
@@ -76,7 +80,7 @@ const App = () => {
       <h2>Numbers</h2>
       <Numbers persons={filteredPersons} />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
