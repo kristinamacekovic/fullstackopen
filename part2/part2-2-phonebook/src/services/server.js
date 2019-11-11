@@ -12,7 +12,13 @@ const deleteEntry = id => {
   return request.then(response => response.data);
 };
 
+const updateEntry = (id, changedObject) => {
+  const request = axios.put(`${baseUrl}/${id}`, changedObject);
+  return request.then(response => response.data);
+};
+
 export default {
   add,
   deleteEntry,
+  updateEntry,
 };

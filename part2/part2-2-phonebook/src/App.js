@@ -44,8 +44,9 @@ const App = () => {
       name: newName,
       number: newNumber,
     };
-    if (isInPersons(newName)) {
-      alert(`${newName} is already added to phonebook`);
+    let out = isInPersons(newName);
+    if (out !== -1) {
+      updatePerson(out, newPerson);
     } else {
       server.add(newPerson).then(data => {
         setPersons(persons.concat(data));
@@ -57,7 +58,19 @@ const App = () => {
 
   const deletePerson = id => {
     if (window.confirm("Do you really want to delete?")) {
-      server.deleteEntry(id).then(person => persons.filter(p => p.id !== id));
+      server
+        .deleteEntry(id)
+        .then(person => setPersons(persons.filter(p => p.id !== id)));
+    }
+  };
+
+  const updatePerson = (id, changedObject) => {
+    if (window.confirm("Do you really want to update the number?")) {
+      server.updateEntry(id, changedObject).then(returnedObject => {
+        setPersons(
+          persons.map(person => (person.id !== id ? person : returnedObject))
+        );
+      });
     }
   };
 
@@ -66,9 +79,9 @@ const App = () => {
       return person.name === name;
     });
     if (match.length) {
-      return true;
+      return match[0].id;
     }
-    return false;
+    return -1;
   };
 
   return (
