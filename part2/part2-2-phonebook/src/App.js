@@ -55,6 +55,12 @@ const App = () => {
     }
   };
 
+  const deletePerson = id => {
+    if (window.confirm("Do you really want to delete?")) {
+      server.deleteEntry(id).then(person => persons.filter(p => p.id !== id));
+    }
+  };
+
   const isInPersons = name => {
     let match = persons.filter(person => {
       return person.name === name;
@@ -78,7 +84,7 @@ const App = () => {
         newNumber={newNumber}
       />
       <h2>Numbers</h2>
-      <Numbers persons={filteredPersons} />
+      <Numbers persons={filteredPersons} deletePerson={deletePerson} />
     </div>
   );
 };
