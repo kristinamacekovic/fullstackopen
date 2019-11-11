@@ -3,7 +3,9 @@ import axios from "axios";
 import { Numbers } from "./components/Numbers";
 import { Form } from "./components/Form";
 import { Filter } from "./components/Filter";
+import { SuccessMessage } from "./components/SuccessMessage";
 import server from "./services/server";
+import "./index.css";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,6 +13,7 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [succesMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     // console.log('effect fired')
@@ -48,11 +51,18 @@ const App = () => {
     if (out !== -1) {
       updatePerson(out, newPerson);
     } else {
-      server.add(newPerson).then(data => {
-        setPersons(persons.concat(data));
-        setNewName("");
-        setNewNumber("");
-      });
+      server
+        .add(newPerson)
+        .then(data => {
+          setPersons(persons.concat(data));
+          setNewName("");
+          setNewNumber("");
+          setSuccessMessage("Successfully added new entry!");
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 5000);
+        })
+        .catch(error => alert("Couldn't add!"));
     }
   };
 
@@ -60,7 +70,14 @@ const App = () => {
     if (window.confirm("Do you really want to delete?")) {
       server
         .deleteEntry(id)
-        .then(person => setPersons(persons.filter(p => p.id !== id)));
+        .then(person => {
+          setPersons(persons.filter(p => p.id !== id));
+          setSuccessMessage("Successfully deleted entry!");
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 5000);
+        })
+        .catch(error => alert("A problem occurred!"));
     }
   };
 
@@ -87,6 +104,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessMessage message={succesMessage}></SuccessMessage>
       <Filter handleSearch={handleSearch} />
       <h3>Add a new</h3>
       <Form
