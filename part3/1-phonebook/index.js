@@ -8,6 +8,10 @@ const generateID = () => {
   return Math.floor(Math.random() * 10000000);
 };
 
+const duplicate = name => {
+  return persons.find(person => person.name === name);
+};
+
 let persons = [
   {
     name: "Ada Lovelace",
@@ -65,11 +69,25 @@ app.delete("/api/persons/:id", (req, res) => {
 
 app.post("/api/persons", (req, res) => {
   const body = req.body;
-  if (!body.name && !body.number) {
+
+  if (!body.name) {
     return res.status(400).json({
-      error: "content missing",
+      error: "name missing",
     });
   }
+
+  if (!body.number) {
+    return res.status(400).json({
+      error: "number missing",
+    });
+  }
+
+  if (duplicate(body.name)) {
+    return res.status(400).json({
+      error: "entry must be unique",
+    });
+  }
+
   const newPerson = {
     name: body.name,
     number: body.number,
