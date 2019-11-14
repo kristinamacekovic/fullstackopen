@@ -51,6 +51,10 @@ let persons = [
   },
 ];
 
+app.get("/", (req, res) => {
+  res.status(301).redirect("/api/persons");
+});
+
 app.get("/api/persons", (req, res) => res.json(persons));
 
 app.get("/api/persons/:id", (req, res) => {
@@ -110,7 +114,7 @@ app.post("/api/persons", (req, res) => {
   res.json(newPerson);
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
