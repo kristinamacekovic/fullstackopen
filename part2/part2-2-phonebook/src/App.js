@@ -17,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     // console.log('effect fired')
-    axios.get("/").then(response => {
+    axios.get("/api/persons").then(response => {
       // console.log('promise fulfilled')
       setPersons(response.data);
       setFilteredPersons(response.data);
