@@ -1,10 +1,8 @@
-import React from 'react'
+import React from "react";
 const Blog = ({ blog }) => (
-  <div>
-    <p>
-      <strong>{blog.title}</strong> - <em>{blog.author}</em>
-    </p>
-  </div>
-)
+  <li>
+    <strong>{blog.title}</strong> - <em>{blog.author}</em>
+  </li>
+);
 
-export { Blog }
+export { Blog };
