@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { login } from "./services/login";
-import { getAllBlogs } from "./services/blogs";
+import { getAllBlogs, createBlog, setToken } from "./services/blogs";
 import { Notification } from "./components/Notification";
 import { Blog } from "./components/Blog";
 
 const App = () => {
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setURL] = useState("");
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
 
@@ -16,21 +19,30 @@ const App = () => {
     if (loggedUser) {
       const user = JSON.parse(loggedUser);
       setUser(user);
+      const populateBlogs = async () => {
+        const allBlogs = await getAllBlogs();
+        const userBlogs = allBlogs.filter(
+          blog => blog.author === user.username
+        );
+        setBlogs(userBlogs);
+      };
+      populateBlogs();
     }
   }, []);
 
   const handleLogin = async event => {
     event.preventDefault();
-    const user = await login({ username, password });
-    setUser(user);
-    window.localStorage.setItem("user", JSON.stringify(user));
-    setUsername("");
-    setPassword("");
-    if (!user.status) {
+    try {
+      const user = await login({ username, password });
+      window.localStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
+      setToken(user.token);
+      setUsername("");
+      setPassword("");
       const allBlogs = await getAllBlogs();
-      const userBlogs = allBlogs.filter(blog => blog.author === username);
+      const userBlogs = allBlogs.filter(blog => blog.author === user.username);
       setBlogs(userBlogs);
-    } else {
+    } catch (exception) {
       setErrorMessage("Wrong credentials, please try again");
       setTimeout(() => {
         setErrorMessage(null);
@@ -70,6 +82,50 @@ const App = () => {
     </form>
   );
 
+  const addForm = () => (
+    <form onSubmit={handleAdd}>
+      <div>
+        <label htmlFor="title">title</label>
+        <input
+          type="text"
+          name="title"
+          id="title"
+          onChange={({ target }) => setTitle(target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="author">author</label>
+        <input
+          type="text"
+          name="author"
+          id="author"
+          onChange={({ target }) => setAuthor(target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="url">url</label>
+        <input
+          type="text"
+          name="url"
+          id="url"
+          onChange={({ target }) => setURL(target.value)}
+        />
+      </div>
+      <button type="submit">Add</button>
+    </form>
+  );
+
+  const handleAdd = async event => {
+    event.preventDefault();
+    const newBlogPost = {
+      title,
+      author,
+      url
+    };
+
+    await createBlog(newBlogPost);
+  };
+
   return (
     <div className="App">
       <h1>Blog App</h1>
@@ -80,6 +136,8 @@ const App = () => {
       ) : (
         <div>
           <h2>{user.username} is logged in</h2>
+          <h2>Add Blog Post</h2>
+          {addForm()}
           <h2>Blog posts</h2>
           <ul>
             {blogs.map(blog => (
