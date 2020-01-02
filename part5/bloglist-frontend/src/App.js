@@ -3,6 +3,8 @@ import { login } from "./services/login";
 import { getAllBlogs, createBlog, setToken } from "./services/blogs";
 import { Notification } from "./components/Notification";
 import { Blog } from "./components/Blog";
+import Toggable from "./components/Toggable";
+import { AddForm } from "./components/AddForm";
 
 const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -82,39 +84,6 @@ const App = () => {
     </form>
   );
 
-  const addForm = () => (
-    <form onSubmit={handleAdd}>
-      <div>
-        <label htmlFor="title">title</label>
-        <input
-          type="text"
-          name="title"
-          id="title"
-          onChange={({ target }) => setTitle(target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="author">author</label>
-        <input
-          type="text"
-          name="author"
-          id="author"
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="url">url</label>
-        <input
-          type="text"
-          name="url"
-          id="url"
-          onChange={({ target }) => setURL(target.value)}
-        />
-      </div>
-      <button type="submit">Add</button>
-    </form>
-  );
-
   const handleAdd = async event => {
     event.preventDefault();
     const newBlogPost = {
@@ -137,7 +106,17 @@ const App = () => {
         <div>
           <h2>{user.username} is logged in</h2>
           <h2>Add Blog Post</h2>
-          {addForm()}
+          <Toggable buttonLabel="add post">
+            <AddForm
+              title={title}
+              author={author}
+              url={url}
+              handleSubmit={handleAdd}
+              handleTitle={({ target }) => setTitle(target.value)}
+              handleAuthor={({ target }) => setAuthor(target.value)}
+              handleURL={({ target }) => setURL(target.value)}
+            ></AddForm>
+          </Toggable>
           <h2>Blog posts</h2>
           <ul>
             {blogs.map(blog => (
