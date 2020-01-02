@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 const AddForm = ({
   title,
   author,
@@ -36,5 +37,15 @@ const AddForm = ({
     <button type="submit">Add</button>
   </form>
 );
+
+AddForm.propTypes = {
+  title: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  handleTitle: PropTypes.func.isRequired,
+  handleAuthor: PropTypes.func.isRequired,
+  handleURL: PropTypes.func.isRequired
+};
 
 export { AddForm };
