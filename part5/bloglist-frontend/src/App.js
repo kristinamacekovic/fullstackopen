@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { login } from "./services/login";
 import { getAllBlogs } from "./services/blogs";
 import { Notification } from "./components/Notification";
@@ -11,22 +11,37 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem("user");
+    if (loggedUser) {
+      const user = JSON.parse(loggedUser);
+      setUser(user);
+    }
+  }, []);
+
   const handleLogin = async event => {
     event.preventDefault();
-    try {
-      const user = login({ username, password });
-      setUser(user);
-      setUsername("");
-      setPassword("");
+    const user = await login({ username, password });
+    setUser(user);
+    window.localStorage.setItem("user", JSON.stringify(user));
+    setUsername("");
+    setPassword("");
+    if (!user.status) {
       const allBlogs = await getAllBlogs();
       const userBlogs = allBlogs.filter(blog => blog.author === username);
       setBlogs(userBlogs);
-    } catch (exception) {
+    } else {
       setErrorMessage("Wrong credentials, please try again");
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
     }
+  };
+
+  const handleLogout = event => {
+    event.preventDefault();
+    window.localStorage.removeItem("user");
+    setUser(null);
   };
 
   const loginForm = () => (
@@ -71,6 +86,7 @@ const App = () => {
               <Blog key={blog.id} blog={blog}></Blog>
             ))}
           </ul>
+          <button onClick={handleLogout}>Log out</button>
         </div>
       )}
     </div>
