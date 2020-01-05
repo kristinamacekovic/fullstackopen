@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useField } from "./hooks/index";
 import { login } from "./services/login";
 import { getAllBlogs, createBlog, setToken } from "./services/blogs";
 import { Notification } from "./components/Notification";
-/*import { Blog } from "./components/Blog";*/
+import { Blog } from "./components/Blog";
 import Toggable from "./components/Toggable";
 import { AddForm } from "./components/AddForm";
-import SimpleBlog from "./components/SimpleBlog";
+/*import SimpleBlog from "./components/SimpleBlog";*/
 
 const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setURL] = useState("");
+  const username = useField("text");
+  const password = useField("password");
+  const title = useField("text");
+  const author = useField("text");
+  const url = useField("text");
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
 
@@ -36,15 +37,18 @@ const App = () => {
   const handleLogin = async event => {
     event.preventDefault();
     try {
-      const user = await login({ username, password });
+      const user = await login({
+        username: username.value,
+        password: password.value
+      });
       window.localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
       setToken(user.token);
-      setUsername("");
-      setPassword("");
       const allBlogs = await getAllBlogs();
       const userBlogs = allBlogs.filter(blog => blog.author === user.username);
       setBlogs(userBlogs);
+      username.onReset();
+      password.onReset();
     } catch (exception) {
       setErrorMessage("Wrong credentials, please try again");
       setTimeout(() => {
@@ -63,23 +67,11 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <div>
         <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          name="username"
-          value={username}
-          id="username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
+        <input name="username" id="username" {...username} />
       </div>
       <div>
         <label htmlFor="pass">Password:</label>
-        <input
-          type="password"
-          name="password"
-          value={password}
-          id="pass"
-          onChange={({ target }) => setPassword(target.value)}
-        />
+        <input name="password" id="pass" {...password} />
       </div>
       <button type="submit">Login</button>
     </form>
@@ -87,13 +79,19 @@ const App = () => {
 
   const handleAdd = async event => {
     event.preventDefault();
+    const t = title.value;
+    const a = author.value;
+    const u = url.value;
     const newBlogPost = {
-      title,
-      author,
-      url
+      title: t,
+      author: a,
+      url: u
     };
 
     await createBlog(newBlogPost);
+    title.onReset();
+    author.onReset();
+    url.onReset();
   };
 
   return (
@@ -113,20 +111,12 @@ const App = () => {
               author={author}
               url={url}
               handleSubmit={handleAdd}
-              handleTitle={({ target }) => setTitle(target.value)}
-              handleAuthor={({ target }) => setAuthor(target.value)}
-              handleURL={({ target }) => setURL(target.value)}
             ></AddForm>
           </Toggable>
           <h2>Blog posts</h2>
           <ul>
             {blogs.map(blog => (
-              /*<Blog key={blog.id} blog={blog}></Blog>*/
-              <SimpleBlog
-                className="test"
-                key={blog.id}
-                blog={blog}
-              ></SimpleBlog>
+              <Blog key={blog.id} blog={blog}></Blog>
             ))}
           </ul>
           <button onClick={handleLogout}>Log out</button>
