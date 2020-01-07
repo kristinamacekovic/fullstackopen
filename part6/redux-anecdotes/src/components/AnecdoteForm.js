@@ -1,15 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
+
 import { addNote } from "../reducers/anecdoteReducer";
 import { addMessage, removeMessage } from "../reducers/messageReducer";
 
-export const AnecdoteForm = props => {
+const AnecdoteForm = props => {
   const addAnecdote = e => {
     e.preventDefault();
     const content = e.target.anecdote.value;
     e.target.anecdote.value = "";
-    props.store.dispatch(addNote(content));
-    props.store.dispatch(addMessage(content));
-    setTimeout(() => props.store.dispatch(removeMessage()), 5000);
+    props.addNote(content);
+    props.addMessage(content);
+    setTimeout(() => props.removeMessage(), 5000);
   };
   return (
     <div>
@@ -23,3 +25,11 @@ export const AnecdoteForm = props => {
     </div>
   );
 };
+
+const mapDispatchToProps = {
+  addNote,
+  addMessage,
+  removeMessage
+};
+
+export default connect(null, mapDispatchToProps)(AnecdoteForm);

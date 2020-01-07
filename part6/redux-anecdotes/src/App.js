@@ -1,14 +1,14 @@
 import React from "react";
-import { AnecdoteForm } from "./components/AnecdoteForm";
-import { AnecdoteList } from "./components/AnecdoteList";
-import { Notification } from "./components/Notification";
+import AnecdoteForm from "./components/AnecdoteForm";
+import AnecdoteList from "./components/AnecdoteList";
+import Notification from "./components/Notification";
 
-const App = props => {
+const App = () => {
   return (
     <div>
-      <AnecdoteList store={props.store} />
-      <AnecdoteForm store={props.store} />
-      <Notification store={props.store} />
+      <AnecdoteList />
+      <AnecdoteForm />
+      <Notification />
     </div>
   );
 };
