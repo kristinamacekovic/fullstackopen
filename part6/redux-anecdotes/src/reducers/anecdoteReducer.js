@@ -31,6 +31,10 @@ const reducer = (state = initialState, action) => {
         votes: noteToChange.votes + 1
       };
       return state.map(note => (note.id === id ? changedNote : note));
+    case "SORT":
+      const newStore = [...state];
+      newStore.sort((a, b) => b.votes - a.votes);
+      return newStore;
     default:
       return state;
   }
@@ -51,6 +55,12 @@ export const vote = id => {
   return {
     type: "VOTE_FOR",
     data: { id }
+  };
+};
+
+export const sort = () => {
+  return {
+    type: "SORT"
   };
 };
 

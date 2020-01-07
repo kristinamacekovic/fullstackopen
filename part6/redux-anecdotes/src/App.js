@@ -1,11 +1,12 @@
 import React from "react";
-import { vote, addNote } from "./reducers/anecdoteReducer";
+import { vote, addNote, sort } from "./reducers/anecdoteReducer";
 
 const App = props => {
   const anecdotes = props.store.getState();
 
   const voteFor = id => {
     props.store.dispatch(vote(id));
+    props.store.dispatch(sort());
   };
 
   const addAnecdote = e => {
