@@ -1,12 +1,15 @@
 import React from "react";
 import { vote, sort } from "../reducers/anecdoteReducer";
+import { addMessage, removeMessage } from "../reducers/messageReducer";
 
 export const AnecdoteList = props => {
   const { anecdotes, message } = props.store.getState();
 
-  const voteFor = id => {
+  const voteFor = (id, content) => {
     props.store.dispatch(vote(id));
     props.store.dispatch(sort());
+    props.store.dispatch(addMessage(content));
+    setTimeout(() => props.store.dispatch(removeMessage()), 5000);
   };
 
   return (
@@ -17,7 +20,9 @@ export const AnecdoteList = props => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => voteFor(anecdote.id)}>vote</button>
+            <button onClick={() => voteFor(anecdote.id, anecdote.content)}>
+              vote
+            </button>
           </div>
         </div>
       ))}
