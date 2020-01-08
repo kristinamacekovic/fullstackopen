@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { addNote } from "../reducers/anecdoteReducer";
-import { addMessage, removeMessage } from "../reducers/messageReducer";
+import { setNotification } from "../reducers/messageReducer";
 
 const AnecdoteForm = props => {
   const addAnecdote = async e => {
@@ -9,8 +9,7 @@ const AnecdoteForm = props => {
     const content = e.target.anecdote.value;
     e.target.anecdote.value = "";
     props.addNote(content);
-    //props.addMessage(content);
-    //setTimeout(() => props.removeMessage(), 5000);
+    props.setNotification(content, 5);
   };
   return (
     <div>
@@ -27,8 +26,7 @@ const AnecdoteForm = props => {
 
 const mapDispatchToProps = {
   addNote,
-  addMessage,
-  removeMessage
+  setNotification
 };
 
 export default connect(null, mapDispatchToProps)(AnecdoteForm);

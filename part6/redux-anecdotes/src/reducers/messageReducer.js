@@ -11,16 +11,19 @@ const messageReducer = (state = initialState, action) => {
   }
 };
 
-export const addMessage = message => {
-  return {
-    type: "WRITE",
-    message
-  };
-};
-
-export const removeMessage = () => {
-  return {
-    type: "ERASE"
+export const setNotification = (message, duration) => {
+  return async dispatch => {
+    dispatch({
+      type: "WRITE",
+      message
+    });
+    setTimeout(
+      () =>
+        dispatch({
+          type: "ERASE"
+        }),
+      duration * 1000
+    );
   };
 };
 
