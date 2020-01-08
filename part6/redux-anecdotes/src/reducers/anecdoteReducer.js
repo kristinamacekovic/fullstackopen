@@ -1,3 +1,5 @@
+import { getAllAnecdotes } from "../services/anecdotes";
+
 const anecdoteReducer = (state = [], action) => {
   switch (action.type) {
     case "ADD":
@@ -42,9 +44,12 @@ export const sort = () => {
 };
 
 export const initialize = notes => {
-  return {
-    type: "INIT",
-    data: notes
+  return async dispatch => {
+    const anecdotes = await getAllAnecdotes();
+    dispatch({
+      type: "INIT",
+      data: anecdotes
+    });
   };
 };
 

@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-
 import { addNote } from "../reducers/anecdoteReducer";
 import { addMessage, removeMessage } from "../reducers/messageReducer";
 import { createNewAnecdote } from "../services/anecdotes";
