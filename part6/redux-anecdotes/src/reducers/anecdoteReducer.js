@@ -21,13 +21,10 @@ const anecdoteReducer = (state = [], action) => {
   }
 };
 
-export const addNote = content => {
+export const addNote = data => {
   return {
     type: "ADD",
-    data: {
-      content: content,
-      votes: 0
-    }
+    data
   };
 };
 

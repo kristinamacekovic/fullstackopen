@@ -3,14 +3,16 @@ import { connect } from "react-redux";
 
 import { addNote } from "../reducers/anecdoteReducer";
 import { addMessage, removeMessage } from "../reducers/messageReducer";
+import { createNewAnecdote } from "../services/anecdotes";
 
 const AnecdoteForm = props => {
-  const addAnecdote = e => {
+  const addAnecdote = async e => {
     e.preventDefault();
     const content = e.target.anecdote.value;
     e.target.anecdote.value = "";
-    props.addNote(content);
-    props.addMessage(content);
+    const newAnecdote = await createNewAnecdote(content);
+    props.addNote(newAnecdote);
+    props.addMessage(newAnecdote.content);
     setTimeout(() => props.removeMessage(), 5000);
   };
   return (
