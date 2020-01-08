@@ -8,8 +8,8 @@ const AnecdoteList = props => {
   const voteFor = (id, content) => {
     props.vote(id);
     props.sort();
-    props.addMessage(content);
-    setTimeout(() => props.removeMessage(), 5000);
+    //props.addMessage(content);
+    //setTimeout(() => props.removeMessage(), 5000);
   };
 
   return (

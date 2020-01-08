@@ -13,4 +13,15 @@ const createNewAnecdote = async content => {
   return response.data;
 };
 
-export { getAllAnecdotes, createNewAnecdote };
+const incrementAnecdote = async id => {
+  const allAnecdotes = await axios.get(baseURL);
+  console.log(allAnecdotes);
+  const findAnecdote = allAnecdotes.data.find(anecdote => id === anecdote.id);
+  const updatedAnecdote = await axios.put(`${baseURL}/${id}`, {
+    ...findAnecdote,
+    votes: findAnecdote.votes + 1
+  });
+  return updatedAnecdote.data;
+};
+
+export { getAllAnecdotes, createNewAnecdote, incrementAnecdote };

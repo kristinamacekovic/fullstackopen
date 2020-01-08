@@ -9,8 +9,8 @@ const AnecdoteForm = props => {
     const content = e.target.anecdote.value;
     e.target.anecdote.value = "";
     props.addNote(content);
-    props.addMessage(content);
-    setTimeout(() => props.removeMessage(), 5000);
+    //props.addMessage(content);
+    //setTimeout(() => props.removeMessage(), 5000);
   };
   return (
     <div>
