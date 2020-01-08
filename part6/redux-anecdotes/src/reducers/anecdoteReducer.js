@@ -1,4 +1,4 @@
-import { getAllAnecdotes } from "../services/anecdotes";
+import { getAllAnecdotes, createNewAnecdote } from "../services/anecdotes";
 
 const anecdoteReducer = (state = [], action) => {
   switch (action.type) {
@@ -24,9 +24,12 @@ const anecdoteReducer = (state = [], action) => {
 };
 
 export const addNote = data => {
-  return {
-    type: "ADD",
-    data
+  return async dispatch => {
+    const newData = await createNewAnecdote(data);
+    dispatch({
+      type: "ADD",
+      data: newData
+    });
   };
 };
 
@@ -43,7 +46,7 @@ export const sort = () => {
   };
 };
 
-export const initialize = notes => {
+export const initialize = () => {
   return async dispatch => {
     const anecdotes = await getAllAnecdotes();
     dispatch({
